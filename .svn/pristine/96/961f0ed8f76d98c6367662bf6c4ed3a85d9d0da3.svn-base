@@ -1,0 +1,101 @@
+{extend name="public/base" /}
+
+{block name="title"}<title>{$Think.lang.list}</title>{/block}
+
+{block name="pjax_container"}
+<section class="content-header">
+    <h1>用户列表</h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> 用户列表</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border"><h3 class="box-title"></h3>
+                    <div class="pull-left">
+                        {:authAction(CONTROLLER_NAME.'/user_edit', 'create')}
+                        {:authAction(CONTROLLER_NAME.'/user_del', 'delete_all')}
+                    </div>
+                    {include file="public/search" /}
+                </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-bordered table-hover table-sort">
+                        <tr>
+                            <th width="35"><input type="checkbox" class="minimal checkbox-toggle"></th>
+                            <th>ID{:table_sort('id')}</th>
+                            <th>头像</th>
+                            <th>昵称</th>
+                            <th>手机{:table_sort('phone')}</th>
+                            <th width="204">{$Think.lang.action}</th>
+                        </tr>
+                        {volist name="dataList" id="vo"}
+                        <tr>
+                            <td style="vertical-align:middle"><input type="checkbox" name="id[]" value="{$vo.id}" class="minimal"></td>
+                            <td style="vertical-align:middle">{$vo.id}</td>
+                            <td style="vertical-align:middle"><img src="{$vo.avatar}" style="width:50px;border-radius:50%;" /></td>
+                            <td style="vertical-align:middle">{$vo.username}</td>
+                            <td style="vertical-align:middle">{$vo.phone}</td>
+                            <td style="vertical-align:middle">
+                                <a class="btn btn-primary btn-xs" href="{:url('Sysmsg/edit', ['uid'=>$vo['id']])}">添加消息</a>
+                                {:authAction(CONTROLLER_NAME.'/user_edit', 'edit', ['id' => $vo.id])}
+                                {:authAction(CONTROLLER_NAME.'/user_del', 'delete', $vo.id)}
+                            </td>
+                        </tr>
+                        {/volist}
+                    </table>
+                </div>
+                <div class="box-footer clearfix">
+                    {$dataList->render()}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    $(function(){
+        /*ajax页面加载icheck，有该控件的页面才需要*/
+        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue',
+            radioClass: 'iradio_minimal-blue'
+        });
+
+        /*ajax页面加载icheck，有该控件的页面才需要*/
+        $(".select2").select2({language:"zh-CN"});
+
+        /*全选-反选*/
+        $('.checkbox-toggle').on('ifChecked', function(event){
+            var _this = $(this);
+            var _table = _this.closest('.table');
+            _table.find("tr td input[type='checkbox']").iCheck("check");
+        });
+        $('.checkbox-toggle').on('ifUnchecked', function(event){
+            var _this = $(this);
+            var _table = _this.closest('.table');
+            _table.find("tr td input[type='checkbox']").iCheck("uncheck");
+        });
+
+        $('.editable').editable({
+            emptytext: "empty",
+            params: function(params) {      //参数
+                var data = {};
+                data['id'] = params.pk;
+                data[params.name] = params.value;
+                return data;
+            },
+            success: function(response, newValue) {
+                var res = $.parseJSON( response );
+                if(res.status == 1){
+                }else{
+                    return res.info;
+                }
+            }
+        });
+
+        {if condition=" $rest_login == 1 "}
+        restlogin('{$rest_login_info}');   //登录超时
+        {/if}
+        })
+</script>
+{/block}

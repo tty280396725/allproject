@@ -1,0 +1,163 @@
+{extend name="public/base" /}
+
+{block name="title"}<title>{$Think.lang.list}</title>{/block}
+
+{block name="pjax_container"}
+<section class="content-header">
+    <h1>竞赛列表</h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> 竞赛列表</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <!--操作提示 面板-->
+            <div class="panel panel-info" style="background-color: #f5faff; border: 1px dashed #62b3ff;">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                    <div class="panel-heading">
+                        <h6 class="panel-title">
+                            <i class="fa fa-bullhorn" aria-hidden="true"></i>&nbsp;操作提示
+                        </h6>
+                    </div>
+                </a>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body" style="color:rgb(103,103,103);">
+                        1.本模块展示本站设置的各种竞赛列表!<br/>
+                        2.竞赛学科为数学时能生成 系统配置中竞赛阶段 里的下一轮竞赛<br/>
+                    </div>
+                </div>
+            </div>
+            <!--操作提示 面板 end-->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    {include file="public/top_action" /}<div class="box-tools" style="top:10px;">
+                    <form action="{:search_url('search')}" method="GET" pjax-search="">
+
+                        <div class="input-group input-group-sm" style=" float: right; width: 130px;">
+                            <input type="text" name="search" class="form-control pull-right" style="width: 150px;" value="{:input('get.search')}" placeholder="{$Think.lang.search}" />
+                            <div class="input-group-btn"><button type="submit" class="btn btn-default sreachs"><i class="fa fa-search"></i>搜索</button></div>
+                        </div>
+                        <div class="input-group input-group-sm" style=" float: right; width: 130px;">
+                            <select name="sid" class="form-control">
+                                <option value="">所有学科</option>
+                                {foreach name="subject" item="vo"}
+                                <option value="{$vo.id}" {if condition="$vo.id eq input('get.sid')"}selected{/if} >{$vo.name}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+
+                    </form>
+                </div>
+                </div>
+                <div class="box-body table-responsive">
+                    <table class="table table-bordered table-hover table-sort">
+                        <tr>
+                            <th width="35"><input type="checkbox" class="minimal checkbox-toggle"></th>
+                            <th>{$Think.lang.id}{:table_sort('id')}</th>
+                            <th>标题</th>
+                            <th>学科</th>
+                            <th>年级</th>
+                            <th>等级</th>
+                            <th>合格线{:table_sort('email')}</th>
+                            <th>考试日期{:table_sort('date')}</th>
+                            <th>考试时间</th>
+                            <th>状态</th>
+                            <th>生成下阶段竞赛</th>
+                            <th width="204">{$Think.lang.action}</th>
+                        </tr>
+                        {volist name="dataList" id="vo"}
+                        <tr>
+                            <td style="vertical-align:middle"><input type="checkbox" name="id[]" value="{$vo.id}" class="minimal"></td>
+                            <td style="vertical-align:middle">{$vo.id}</td>
+                            <td style="vertical-align:middle">{$vo.title}</td>
+                            <td style="vertical-align:middle">{$subject[$vo['subject']]['name']}</td>
+                            <td style="vertical-align:middle">{$vo.class}</td>
+                            <td style="vertical-align:middle">
+                                {if condition="in_array($vo['subject'], $show_level_ids)"}
+                                    {$vo.type}
+                                {/if}
+                            </td>
+                            <td style="vertical-align:middle">{$vo.pass_line}</td>
+                            <td style="vertical-align:middle">{$vo.date}</td>
+                            <td style="vertical-align:middle">{$vo.time}</td>
+                            <td style="vertical-align:middle">{$vo.status}</td>
+                            <td style="vertical-align:middle">
+                                {if condition="!$vo.reload AND ($subject[$vo['subject']]['is_level'])"}
+                                    <a class="btn btn-primary btn-xs" href="javascript:next_competition('{$vo.id}');">生成下阶段竞赛</a>
+                                {/if}
+                            </td>
+                            <td style="vertical-align:middle">
+                                {include file="public/list_action" /}
+                            </td>
+                        </tr>
+                        {/volist}
+                    </table>
+                </div>
+                <div class="box-footer clearfix">
+                    {$dataList->render()}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    // 生成下阶段竞赛
+    function next_competition(id){
+        $.ajax({
+            type:'post',
+            url:"{:url('next_competition')}",
+            data:{"id":id},
+            success:function(data){
+                if(data == 1){
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    $(function(){
+        /*ajax页面加载icheck，有该控件的页面才需要*/
+        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue',
+            radioClass: 'iradio_minimal-blue'
+        });
+
+        /*ajax页面加载icheck，有该控件的页面才需要*/
+        $(".select2").select2({language:"zh-CN"});
+
+        /*全选-反选*/
+        $('.checkbox-toggle').on('ifChecked', function(event){
+            var _this = $(this);
+            var _table = _this.closest('.table');
+            _table.find("tr td input[type='checkbox']").iCheck("check");
+        });
+        $('.checkbox-toggle').on('ifUnchecked', function(event){
+            var _this = $(this);
+            var _table = _this.closest('.table');
+            _table.find("tr td input[type='checkbox']").iCheck("uncheck");
+        });
+
+        $('.editable').editable({
+            emptytext: "empty",
+            params: function(params) {      //参数
+                var data = {};
+                data['id'] = params.pk;
+                data[params.name] = params.value;
+                return data;
+            },
+            success: function(response, newValue) {
+                var res = $.parseJSON( response );
+                if(res.status == 1){
+                }else{
+                    return res.info;
+                }
+            }
+        });
+
+        {if condition=" $rest_login == 1 "}
+        restlogin('{$rest_login_info}');   //登录超时
+        {/if}
+    });
+</script>
+{/block}

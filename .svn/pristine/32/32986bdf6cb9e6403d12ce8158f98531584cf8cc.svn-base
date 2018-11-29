@@ -1,0 +1,584 @@
+<?php
+namespace app\admin\controller;
+
+use app\admin\model\Apply as ApplyClass;
+use app\admin\model\Apply_state;
+use app\admin\model\Organization;
+use app\admin\model\Competition;
+use app\admin\model\RegisterUser;
+use app\admin\model\Ticket;
+use think\Db;
+use think\Loader;
+use think\Request;
+
+class Apply extends Common
+{
+    private $cModel;   //当前控制器关联模型
+
+    public function _initialize()
+    {
+        parent::_initialize();
+        $this->cModel = new ApplyClass();   //别名：避免与控制名冲突
+    }
+
+    public function index()
+    {
+        $where = [];
+        if (input('get.search')){
+            $where['a.id|a.uid'] = ['like', '%'.input('get.search').'%'];
+        }
+        if (input('get.cid')){
+            $where['a.cid'] = input('get.cid');
+            $this ->assign('cid',input('get.cid'));
+        }
+        if (input('get.oid')){
+            $where['a.oid'] = input('get.oid');
+            $this ->assign('oid',input('get.oid'));
+        }
+        if (in_array(input('get.dstatus'),array(0,-1,1,2)) && input('get.dstatus') !== null && input('get.dstatus') !== ''){
+            $where['b.dstatus'] = input('get.dstatus');
+            $this ->assign('dstatus',input('get.dstatus'));
+        }
+
+        if (input('get._sort')){
+            $order = explode(',', input('get._sort'));
+            $order = $order[0].' '.$order[1];
+        }else{
+            $order = 'a.id asc';
+        }
+
+
+
+
+        $dataList = $this->cModel->alias('a') ->join('organization o','a.oid=o.id')->join('apply_state b','b.aid=a.id')->where($where)->order($order)->field('a.*,o.name as oname,b.payType,b.dstatus,o.address,o.id as oid,b.content')->paginate('', false, page_param())->each(function ($items,$key){
+
+            $compData = Db::table('tf_competition') ->where('status',1)->field('id,title') ->select();
+            foreach ($compData as $v){
+                $competition[$v['id']] = $v['title'];
+            }
+
+            $items['title'] = $competition[$items['cid']];
+            return $items;
+        });
+
+        $orgData = Db::table('tf_organization') ->field('name,address,id') ->select();
+        $compData = Db::table('tf_competition') ->where('status',1)->field('id,title,subject') ->select();
+        $this->assign('dataList', $dataList);
+        $this ->assign('compData',$compData); //竞赛数据
+        $this ->assign('orgData',$orgData);
+        return $this->fetch();
+    }
+
+
+    /***
+     * @throws \PHPExcel_Exception
+     * @throws \PHPExcel_Writer_Exception
+     * 分类导出表格
+     */
+    public function execl(){
+
+        $where = [];
+        if (input('get.search')){
+            $where['a.id|a.uid'] = ['like', '%'.input('get.search').'%'];
+        }
+        if (input('get.cid')){
+            $where['a.cid'] = input('get.cid');
+            $this ->assign('cid',input('get.cid'));
+        }
+        if (input('get.oid')){
+            $where['a.oid'] = input('get.oid');
+            $this ->assign('oid',input('get.oid'));
+        }
+        if (in_array(input('get.dstatus'),array(0,-1,1,2)) && input('get.dstatus') !== null && input('get.dstatus') !== ''){
+            $where['b.dstatus'] = input('get.dstatus');
+            $this ->assign('dstatus',input('get.dstatus'));
+        }
+
+        if (input('get._sort')){
+            $order = explode(',', input('get._sort'));
+            $order = $order[0].' '.$order[1];
+        }else{
+            $order = 'a.id asc';
+        }
+
+        //上面是检索的内容
+        $header = array('报名ID','姓名','科目','年级','性别','电话','年龄','费用','比赛项目','考试日期','考试时间','状态');
+        $data =array();
+        $filename = '报名数据表'.date('Y-m-d',time());
+
+        $dataList = $this->cModel->alias('a') ->join('competition c','a.cid=c.id')->join('apply_state b','b.aid=a.id')->where($where)->order($order)->field('a.*,b.payType,b.dstatus,c.title as ctitle,c.date,c.time')->select();
+
+        $list =array();
+        foreach ($dataList as $k=>$v){
+            $list[$k][] = $v ->id;
+            $list[$k][] = $v ->name;
+            $list[$k][] = parent::getnewValue($v ->subject,'subject');
+            $list[$k][] = $v ->class;
+            $list[$k][] = parent::getnewValue($v ->sex,'sex');
+            $list[$k][] = $v ->phone;
+            $list[$k][] = $v ->age;
+            $list[$k][] = $v ->cost;
+            $list[$k][] = $v ->ctitle;
+            $list[$k][] = date('Y-m-d',$v ->date);
+            $list[$k][] = $v ->time;
+            $list[$k][] = parent::getnewValue($v ->dstatus,'dstatus');
+        }
+
+
+        foreach ($list as $k=>$v){
+            foreach ($header as $sk => $sv){
+                $data[$k][$header[$sk]] = $v[$sk];
+            }
+        }
+
+
+        parent::importExcel($header,$data,$filename);
+
+        die();
+
+    }
+
+
+    /***
+     * @return mixed|void
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     *  在后台添加报名的功能  （已弃用）
+     */
+    public function create()
+    {
+        if (request()->isPost()){
+
+            Db::startTrans();
+            try{
+                $data = input('post.');
+
+                if (empty($data['province']) || empty($data['city']) || empty($data['town']))
+                {
+                    return ajaxReturn('区域信息请填写完整');
+                    die();
+                }
+
+                $data['area'] = $data['province'].'/'.$data['city'].'/'.$data['town'];
+                $phone = $data['phone'];
+                $userObj = new RegisterUser();
+                $userData = $userObj ->where('phone',$phone)->field('id')->find(); //找该用户是否注册
+                $applyData= array();
+                if ($userData){
+                    $data['uid'] = $userData['id'];
+                    $applyData['uid'] = $userData['id'];
+                }else{
+                    $insertUser['phone'] = $phone;
+                    $pwd = substr($phone,-6);//手机号码后6位为密码
+                    $insertUser['salt'] = parent::randomkeys(4);
+                    $insertUser['pwd'] = md5($pwd.'_'.$insertUser['salt']);
+
+                    $userId = $userObj->allowField(true) ->validate(true) ->insertGetId($insertUser);
+
+                    if (!$userId){
+                        return ajaxReturn($userObj->getError());
+                    }
+                    $applyData['uid'] = $userId;
+                    $data['uid'] = $userId;
+                }
+
+
+                $changeData = explode('-',$data['cid']);
+                $data['cid'] = $changeData[0];
+
+                $competObj = new Competition();//竞赛
+                $data['cost'] = $competObj ->where('id',$data['cid']) ->limit(1) ->find()['cost']; //获取支付款
+                $data['subject'] = $changeData[1];
+
+                unset($data['province']);
+                unset($data['city']);
+                unset($data['town']);
+                $insertID = $this->cModel->allowField(true)->validate(true)->insertGetId($data);
+
+                $applyData['aid'] = $insertID;
+                $applyData['create_time'] = time();
+
+                $state = Db::table('tf_apply_state')->insert($applyData);
+
+                if ($insertID && $state){
+                    Db::commit();
+                    return ajaxReturn(lang('action_success'), url('index'));
+                }else{
+                    return ajaxReturn($this->cModel->getError());
+                }
+
+            } catch (\Exception $e) {
+                // 回滚事务
+                Db::rollback();
+                return ajaxReturn($e->getMessage());
+            }
+
+        }else{
+            $competObj = new Competition();//竞赛
+            $organObj = new Organization();//培训机构
+            $compList = $competObj ->where('status',1)->field('subject,id,title,class,cost')->select();
+            $organList = $organObj ->field('name,id') ->select();
+            $subjectData = Db::table('tf_subject') ->field('id,name') ->select();
+            $this->assign('compList', $compList);
+            $this->assign('organList',$organList);
+            $this->assign('subjectData',$subjectData);
+            return $this->fetch();
+        }
+    }
+
+    /***
+     * @param $id
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     *  对报名信息进行修改操作
+     */
+    public function edit($id)
+    {
+        if (request()->isPost()){
+            $data = input('post.');
+            if (!empty($data['province']) && !empty($data['city']) && !empty($data['town']))
+            {
+                $data['area'] = $data['province'].'/'.$data['city'].'/'.$data['town'];
+            }
+
+            $id = $data['id'];
+
+            $changeData = explode('-',$data['cid']);
+            $data['cid'] = $changeData[0];
+            $data['subject'] = $changeData[1];
+            $competObj = new Competition();//竞赛
+            $data['cost'] = $competObj ->where('id',$data['cid']) ->limit(1) ->find()['cost']; //获取支付款
+
+
+            unset($data['province']);
+            unset($data['city']);
+            unset($data['town']);
+            $validate = Loader::validate('apply');
+            if (!$validate ->check($data)){
+                return ajaxReturn($validate ->getError());die();
+            }
+
+            $result = $this->cModel ->where('id',$id)->update($data);
+
+            if ($result){
+                return ajaxReturn(lang('action_success'), url('index'));
+            }else{
+                return ajaxReturn($this->cModel->getError());
+            }
+
+        }else{
+
+            $competObj = new Competition();//竞赛
+            $organObj = new Organization();//培训机构
+            $compList = $competObj ->where('status',1)->field('subject,id,title,class')->select();
+            $organList = $organObj ->field('name,id') ->select();
+            $data = $this->cModel ->where('id',$id) ->limit(1) ->find();
+            $area = explode('/',$data['area']);
+            $data['province'] = $area[0];
+            $data['city'] = $area[1];
+            $data['town'] = $area[2];
+
+            $this->assign('compList', $compList);
+            $this->assign('organList',$organList);
+            $this->assign('data',$data);
+            return $this->fetch();
+        }
+    }
+
+    /***
+     * 删除报名信息
+     */
+    public function delete()
+    {
+        if (request()->isPost()){
+            $id = input('id');
+            Db::startTrans();
+            try{
+                if (isset($id) && !empty($id)){
+                    $id_arr = explode(',', $id);
+                    $where = [ 'id' => ['in', $id_arr] ];
+                    $where2 = ['aid'=>['in',$id_arr]];
+                    $result = $this->cModel->where($where)->delete();
+                    $result2 = Db::table('tf_apply_state') ->where($where2) ->delete();
+                    if ($result && $result2){
+                        Db::commit();
+                        return ajaxReturn(lang('action_success'), url('index'));
+                    }else{
+                        return ajaxReturn($this->cModel->getError());
+                    }
+                }
+            } catch (\Exception $e) {
+                // 回滚事务
+                Db::rollback();
+                return ajaxReturn($e->getMessage());
+            }
+        }
+    }
+
+
+
+    /**
+     * 生成准考证（已废弃）
+     */
+    public function makeCard(){
+
+        if (request()->isPost()){
+            die('已废弃');
+            $id = input('id');
+            $status = input('status');
+
+            if (isset($id) && !empty($id)){
+                $id_arr = explode(',', $id);
+                $where = [ 'a.id' => ['in', $id_arr] ];
+
+                if ($status == 0){
+                    //单个审核
+                    $data = $this->cModel->alias('a') ->join('organization o','a.oid=o.id')->join('competition c','a.cid=c.id')->join('apply_state p','p.aid=a.id')->where($where)->where('p.dstatus',2) ->limit(1) ->field('a.*,o.address,c.title as ctitle,c.time,c.date')->find();
+
+                    if ($data){
+                        $subjectData = Db::table('tf_subject') ->field('id,name') ->select();
+                        $subjectList = array();
+                        foreach ($subjectData as $v){
+                            $subjectList[$v['id']] = $v['name'];
+                        }
+                        $subject = $subjectList[$data['subject']];
+
+                        $insert = array();
+                        $insert['name'] = $data['name'];
+                        $insert['class'] = $data['class'];
+                        $insert['subject'] = $subject;
+                        $insert['age'] = $data['age'];
+                        $insert['pic'] = $data['pic'];
+                        $insert['title'] = $data['ctitle'];
+                        $insert['time'] = $data['time'];
+                        $insert['date'] = $data['date'];
+                        $insert['tnum'] = self::getExamNum();
+                        $insert['uid'] = $data['uid'];
+                        $insert['addr'] = $data['address'];
+
+                        /*$stateArr['aid'] = $data['id'];
+                        $stateArr['uid'] = $data['uid'];
+                        $state['dstatus'] = 2;
+                        $state['update_time'] = time();**/
+
+
+                        Db::startTrans();
+                        try{
+                            //修改审核状态
+                            /*$state = Db::table('tf_apply_state') -> limit(1)->where('aid',$stateArr['aid'])->where('uid',$stateArr['uid']) ->update($state);
+                            if (!$state){
+                                return ajaxReturn('审核状态修改失败',0);
+                            }*/
+
+                            $ticketObj = new Ticket(); //准考证
+                            $res = $ticketObj->save($insert);//添加准考证信息
+
+                            if ($res){
+                                $res2 = $this->cModel ->where('id',$id) ->update(array('is_create'=>1));
+                            }else{
+                                return ajaxReturn($ticketObj->getError());
+                            }
+
+                            if ($res && $res2){
+                                Db::commit();
+                                return ajaxReturn(lang('action_success'), url('index'));
+                            }else{
+                                return ajaxReturn($this->cModel->getError());
+                            }
+
+                        } catch (\Exception $e) {
+                            // 回滚事务
+                            Db::rollback();
+                            return ajaxReturn($e->getMessage());
+                        }
+                    }else{
+                        return ajaxReturn($this->cModel->getError());
+                    }
+
+
+                }else{
+
+                    //群个审核
+                    $data = $this->cModel->alias('a') ->join('organization o','a.oid=o.id')->join('competition c','a.cid=c.id')->join('apply_state p','p.aid=a.id')->where($where)->where('p.dstatus',2) ->field('a.*,o.address,c.title as ctitle,c.time,c.date')->select();
+
+                    if ($data){ //有信息
+
+                        $subjectData = Db::table('tf_subject') ->field('id,name') ->select();
+
+                        $subjectList = array();
+                        foreach ($subjectData as $v){
+                            $subjectList[$v['id']] = $v['name'];
+                        }
+
+                        $insert = array();
+                        foreach ($data as $k =>$v){
+                            $subject = $subjectList[$v['subject']];
+                            $insert[$k]['name'] = $v['name'];
+                            $insert[$k]['class'] = $v['class'];
+                            $insert[$k]['subject'] = $subject;
+                            $insert[$k]['age'] = $v['age'];
+                            $insert[$k]['pic'] = $v['pic'];
+                            $insert[$k]['title'] = $v['ctitle'];
+                            $insert[$k]['time'] = $v['time'];
+                            $insert[$k]['date'] = $v['date'];
+                            $insert[$k]['tnum'] = self::getExamNum();
+                            $insert[$k]['uid'] = $v['uid'];
+                            $insert[$k]['addr'] = $v['address'];
+
+                            /**$stateArr[$k]['aid'] = $v['id'];
+                            $stateArr[$k]['uid'] = $v['uid'];
+                            $stateArr[$k]['dstatus'] = 2;
+                            $stateArr[$k]['update_time'] = time();**/
+                        }
+
+
+
+                        Db::startTrans();
+                        try{
+
+                           /** $apply_state_obj = new Apply_state();
+                            //修改审核状态
+                            $state = $apply_state_obj ->isUpdate(true)->saveAll($stateArr);
+
+                            if (!$state){
+                                return ajaxReturn('审核状态修改失败');
+                            }**/
+
+                            $ticketObj = new Ticket(); //准考证
+                            $res = $ticketObj->saveAll($insert);//添加准考证信息
+
+                            if ($res){
+                                $res2 = $this->cModel->alias('a') ->where($where) ->limit(1) ->update(array('is_create'=>1));
+                            }else{
+                                return ajaxReturn($ticketObj->getError());
+                            }
+
+                            if ($res && $res2){
+                                Db::commit();
+                                return ajaxReturn(lang('action_success'), url('index'));
+                            }else{
+                                return ajaxReturn($this->cModel->getError());
+                            }
+
+                        } catch (\Exception $e) {
+                            // 回滚事务
+                            Db::rollback();
+                            return ajaxReturn($e->getMessage());
+                        }
+                    }else{
+                        return ajaxReturn($this->cModel->getError());
+                    }
+
+                }
+
+            }
+        }
+    }
+
+
+    protected function getExamNum(){
+        $time = time();
+        $num = date('Ymd').substr($time,4);
+        return $num;
+    }
+
+    /**
+     * 报名审核通过
+     */
+    public function check(){
+        if (request()->isPost()){
+            $id = input('id');
+            $status = input('status');
+
+            if (isset($id) && !empty($id)){
+                $id_arr = explode(',', $id);
+                $where = [ 'a.id' => ['in', $id_arr] ];
+
+                if ($status == 0){
+                    //单个审核
+                    $data = $this->cModel ->alias('a')->where($where)->limit(1) ->field('id,uid') ->find();
+
+                    if ($data){
+                        $stateArr['aid'] = $data['id'];
+                        $stateArr['uid'] = $data['uid'];
+                        $state['dstatus'] = 2;
+                        $state['update_time'] = time();
+
+                        $state = Db::table('tf_apply_state') -> limit(1)->where('aid',$stateArr['aid'])->where('uid',$stateArr['uid']) ->update($state);
+                        if (!$state){
+                            return ajaxReturn('审核状态修改失败',0);
+                        }
+                        return ajaxReturn(lang('action_success'), url('index'));
+
+                    }else{
+                        return ajaxReturn('操作失败', url('index'));
+                    }
+
+                }else{
+                    //群个审核
+                    $data = $this->cModel ->alias('a') ->join('apply_state p','p.aid=a.id')->where($where)->where('p.dstatus',1)->field('a.id,a.uid')->select();
+
+                    if ($data){ //有信息
+                        foreach ($data as $k =>$v){
+                            $statew[$k]['aid'] = $v['id'];
+                            $statew[$k]['uid'] = $v['uid'];
+                        }
+                        $stateArr['dstatus'] = 2;
+                        $stateArr['update_time'] = time();
+                        $apply_state_obj = new Apply_state();
+                        foreach ($statew as $v){
+                            $apply_state_obj ->where($v)->limit(1) ->update($stateArr);
+                        }
+
+                        return ajaxReturn(lang('action_success'), url('index'));
+
+                    }else{
+
+                        return ajaxReturn('操作失败', url('index'));
+                    }
+
+                }
+
+            }
+        }
+    }
+
+
+    /***
+     * 审核拒绝
+     */
+    public function refue(){
+        if (request()->isPost()){
+            $id = input('id');
+            $content = input('content');
+            if (isset($id) && !empty($id)){
+                $id_arr = explode(',', $id);
+                $where = [ 'a.id' => ['in', $id_arr] ];
+
+                $uidArr = $this->cModel ->alias('a') ->join('apply_state p','p.aid=a.id')->where('p.dstatus',1)->where($where) ->field('a.id,a.uid') ->select();
+                if ($uidArr){
+                    foreach ($uidArr as $k=>$v){
+                        $statew[$k]['aid'] = $v['id'];
+                        $statew[$k]['uid'] = $v['uid'];
+                    }
+                    $stateArr['dstatus'] = -1;
+                    $stateArr['content'] = $content;
+
+                    $apply_state_obj = new Apply_state();
+                    //修改审核状态
+                    foreach ($statew as $v){
+                        $apply_state_obj ->where($v)->limit(1) ->update($stateArr);
+                    }
+                    return ajaxReturn(lang('action_success'), url('index'));
+                }else{
+                    return ajaxReturn('审核失败', url('index'));
+                }
+            }
+        }
+    }
+
+
+}

@@ -1,0 +1,66 @@
+<?php
+namespace app\index\controller;
+
+class Works extends Common{
+
+    public function _initialize(){
+        parent::_initialize();
+    }
+
+    /**
+     * 书画作品上传
+     * @return \think\response\Json
+     */
+    public function upload_work(){
+        if (request()->isPost()){
+            $data = input('post.');
+            if (empty(trim($data['name'])) || empty(trim($data['desp']))){
+                return parent::_responseResult(0,'名称或描述不能为空');
+            }
+            $user_id = $this->user_id;
+            $data['uid'] = $user_id;
+            $data['cid'] = $data['id'];
+            $comp = model('Competition')->alias('c')->join('__SUBJECT__ s', 'c.subject=s.id')->field('s.id, s.age_cover_class')
+                ->where(['c.id'=>$data['id']])->find();
+            if($comp){
+                if(!$comp['age_cover_class']){
+                    return parent::_responseResult(0, '学科有误');
+                }
+                $data['subject'] = $comp['id'];
+                /*$upload_info = action('Index/Uploads/upload');
+                if($upload_info['error']){
+                    return self::_responseResult(0, $upload_info['message']);
+                }
+                $data['imgs'] = $upload_info['url'];*/
+                $data['imgs'] = $data['imgs'];
+                $time = time();
+                $data['create_time'] = $time;
+                $data['update_time'] = $time;
+                unset($data['id']);
+                $ok = db('works')->insert($data);
+                $ok ? $res = parent::_responseResult(1, '提交成功') : $res = parent::_responseResult(0, '提交失败');
+                return $res;
+            }
+        }
+    }
+
+    /**
+     *  查看书画作品
+     * @return \think\response\Json
+     */
+    public function show_work(){
+        $where = [
+            'id'=>input('id'),
+            'uid'=>$this->user_id,
+        ];
+
+        $info = model('Works')->where($where)->field('name, desp, imgs')->find();
+        if ($info){
+            $info['imgs'] = request()->domain().$info['imgs'];
+        }else{
+            $info = array();
+        }
+        return parent::_responseResult(1, 'ok', $info);
+    }
+
+}

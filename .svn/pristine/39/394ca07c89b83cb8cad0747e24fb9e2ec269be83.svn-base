@@ -1,0 +1,322 @@
+<?php
+namespace app\index\controller;
+use app\index\model\Feedback;
+use app\index\model\Grade;
+use app\index\model\Sysmsg;
+use app\index\model\Apply;
+use app\index\model\Ticket;
+use app\index\model\Competition;
+use app\index\model\Works;
+use think\Cache;
+use think\Db;
+use think\Session;
+
+
+class My extends Common{
+
+    public function _initialize(){
+        parent::_initialize();
+    }
+    /***
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 获取我的报名列表的数据
+     */
+    public function apply_list(){
+
+        if (request() ->isGet()){
+            $param = input('get.');
+            $p = isset($param['p']) ? intval($param['p']) : 1;
+            $compList = self::getMycompetition();//获取我的竞赛信息和竞赛状态
+            $page = 4; //每页5个
+            $start = ($p-1)*$page;
+            if (!empty($p)){
+                $compList = array_slice($compList,$start,$page);
+            }
+
+            $list['list'] = $compList;
+            $list['total'] = ceil(count($compList)/5);
+
+            return parent::_responseResult('1','返回成功',$list);
+
+
+        }
+    }
+
+    /***
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 获取我的竞赛的列表
+     */
+    public function event_list(){
+
+        if (request()->isGet()){
+            $param = input('get.');
+            $user_id = $this ->user_id;
+            $p = isset($param['p']) ? intval($param['p']) : 1;
+            $compList = self::getMycompetition(2);
+
+            $gradeObj = new Grade();
+            $gradeData = $gradeObj ->where('uid',$user_id)->where('is_issue',1) ->field('cid,grade,is_pass,id as gid') ->select();
+
+            if (!empty($gradeData)){
+                $gradeList = array();
+                foreach ($gradeData as $v){
+                    $gradeList[] = $v ->toArray(); //我的成绩列表
+                }
+
+                foreach ($gradeList as $v){
+                    foreach ($compList as $k=>$sv){
+                        if ($v['cid'] == $sv['id']){
+                            $compList[$k]['grade'] = $v['grade'];
+                            $compList[$k]['is_pass'] = $v['is_pass'];
+                            $compList[$k]['gid'] = $v['gid'];
+                        }
+                    }
+                }
+            }
+
+            $page = 5; //每页6个
+            $start = ($p-1)*$page;
+            if ($p != 1 && !empty($p)){
+                $compList = array_slice($compList,$start,$page);
+            }
+
+            $list['list'] = $compList;
+            $list['total'] = ceil(count($compList)/5);
+
+
+            return parent::_responseResult('1','返回正常',$list);
+        }
+    }
+
+    /***
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 获取我的竞赛信息和竞赛状态
+     */
+    public function getMycompetition($dstatus=0){
+
+        $user_id = $this ->user_id;
+        $applyObj = new Apply();
+        $compObj = new Competition();
+        $where = array();
+        if ($dstatus != 0){
+            $where['dstatus'] = 2;
+        }else{
+            $where['dstatus'] = ['neq',2];
+        }
+
+        $applyData = $applyObj ->alias('a') ->join('apply_state b','a.id=b.aid') ->where('a.uid',$user_id)->where($where) ->field('a.cid,b.dstatus,b.content,a.id as aid') ->select();
+
+        if (empty($applyData)){
+            return parent::_responseResult('0','该用户数据不存在');die();
+        }
+
+        $list = array();
+        foreach ($applyData as $v){
+            $list[] = $v->toArray();
+        }
+
+        $compData = $compObj ->field('title,startTime,endTime,com_des,subject,id,class,type') ->select();
+        if (empty($compData)){
+            return parent::_responseResult('0','没有竞赛数据');
+        }
+
+        $outArr = array();
+        foreach ($applyData as $k=>$v){
+            foreach ($compData as $sv){
+                if ($v['cid'] == $sv['id']){
+                    $sv['dstatus'] = $v['dstatus'];
+                    $sv['content'] = $v['content'];
+                    $sv['aid'] = $v['aid'];
+                    $outArr[] = $sv->toArray();
+                }
+            }
+        }
+
+        $worksObj = new Works();
+        foreach ($outArr as $k=>$v){
+            if ($v['subject'] == 5){ //5是书画
+                $check = $worksObj ->where('uid',$user_id) ->where('cid',$v['id']) ->limit(1) ->field('id') ->find();
+                if ($check){
+                    $outArr[$k]['is_upload'] = 1; //上传了
+                    $outArr[$k]['kid'] = $check['id'];
+                }else{
+                    $outArr[$k]['is_upload'] = 0; //没上传
+                }
+            }else{
+                $outArr[$k]['is_upload'] = 0; //没上传
+            }
+
+            $outArr[$k]['subject_name'] = parent::getnewValue($v['subject'],'subject');
+        }
+
+
+        return $outArr;
+    }
+
+    /***
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 我的准考证列表
+     */
+    public function my_ticket(){
+        $host = request()->domain();
+        if (request()->isGet()){
+            $user_id = $this ->user_id;
+            $user_id = 39;
+            $ticketObj = new Ticket();
+            $time = time()-7*3600*24;//七天后过期
+            $ticketData = $ticketObj->alias('a') ->join('competition c','a.cid = c.id') ->where('a.uid',$user_id) ->where('a.date','>',$time) ->order('a.id desc')->field('a.id,c.title,a.name,a.class,a.subject,a.sex,a.pic,a.date,a.time,a.addr,a.tnum') ->select();
+            $ticketList = array();
+            if (empty($ticketData)){
+                return parent::_responseResult('1','没有数据');
+            }
+
+            foreach ($ticketData as $v){
+                $v['date'] = date('Y-m-d',$v['date']);
+                $v['sex'] = $v['sex'] == 0 ? '女' : '男';
+                $v['subject'] = parent::getnewValue($v['subject'],'subject');
+                $v['pic'] = $v['pic'];
+
+                $ticketList[] = $v->toArray();
+            }
+
+            return parent::_responseResult('1','返回正常',$ticketList);
+        }
+    }
+
+    /***
+     * @return \think\response\Json
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 获取我的系统信息的列表
+     * @Cache  key  'get_my_user_msg_'.$user_id
+     */
+    public function msg_list() {
+        if (request()->isGet()) {
+            $user_id = $this->user_id;
+            $msgList = Cache::get('get_my_user_msg_' . $user_id);
+            if (empty($msgList)) {
+                $msgObj = new Sysmsg();
+                $msgData = $msgObj->where('uid', $user_id)->whereOr('uid', '=', 0)->field('title,is_read,id, update_time')->select();
+                $msgList = array();
+                if ($msgData) {
+                    foreach($msgData as $k=>$v){
+                        $msgList[] = $v->toArray();
+                    }
+                }
+                Cache::set('get_my_user_msg_' . $user_id, $msgList, 3600 * 24);
+            }
+            return parent::_responseResult('1', '返回正常', $msgList);
+        }
+    }
+
+    /**
+     * 查看系统消息详情
+     * @return \think\response\Json
+     */
+    public function msg_info(){
+        $info = db('sysmsg')->where(['id'=>input('id')])->find();
+        $err = 0;
+        !$info && $err = 1;
+        // 判断接受者
+        if($info['uid']){
+            if($info['uid'] != $this->user_id){
+                $err = 1;
+            }
+        }
+        if($err){
+            return parent::_responseResult('0', '信息有误');
+        }
+        db('sysmsg')->where(['id'=>input('id')])->update(['is_read'=>1]);
+        $info['update_time'] = date('Y/m/d H:i:s', $info['update_time']);
+        return parent::_responseResult('1','ok',$info);
+    }
+
+    /****
+     * @return \think\response\Json
+     * 意见反馈
+     */
+    public function put_opinion(){
+        if (request() ->isPost()){
+            $data = input('post.');
+            $data['uid'] = $this ->user_id;
+            if (empty($data['content'])){
+                return parent::_responseResult('0','内容不能为空');
+            }
+            $feedObj = new Feedback();
+            $res = $feedObj ->allowField(true) ->save($data);
+            if ($res){
+                return parent::_responseResult('1','提交成功');
+            }else{
+                return parent::_responseResult('0','提交失败');
+            }
+
+        }
+    }
+
+    /**
+     * 提交成绩合格后填写的收件地址
+     * @return \think\response\Json
+     */
+    public function grade_addr()
+    {
+        if (request()->isPost()) {
+            $data = input('post.');
+            $err = "";
+            !trim($data['address']) && $err = '详细地址不能为空';
+            !trim($data['area']) && $err = '地区不能为空';
+            !trim($data['phone']) && $err = '联系电话不能为空';
+            !trim($data['linkman']) && $err = '联系人不能为空';
+            if ($err) {
+                return parent::_responseResult(0, $err);
+            }
+            $where['uid'] = $this->user_id;
+            $where['id'] = $data['gid'];
+            unset($data['gid']);
+            $info = \db('grade')->where($where)->update($data);
+            $info ? $res = parent::_responseResult(1, '提交成功') : $res = parent::_responseResult(0, '提交失败');
+            return $res;
+        }
+    }
+
+
+
+    public function pay_callback_common(){
+
+        $data['uid'] = $user_id;
+        $applyObj = new Applyclass();
+        $applyStateObj = new Apply_state(); //报名状态
+        Db::startTrans();
+        try{
+            $insertId = $applyObj ->allowField(true) ->insertGetId($data);
+            $insert['aid'] = $insertId;
+            $insert['uid'] = $user_id;
+
+            $res2 = $applyStateObj ->allowField(true) ->save($insert);
+            if ($insertId && $res2){
+                Db::commit();
+                return parent::_responseResult('1','报名成功');
+            }
+
+        }catch (\Exception $e) {
+            // 回滚事务
+            Db::rollback();
+            return parent::_responseResult('0','报名失败');
+        }
+
+    }
+
+
+
+}

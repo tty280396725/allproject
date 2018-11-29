@@ -1,0 +1,54 @@
+<?php
+namespace app\admin\model;
+
+class Organization extends \think\Model {
+
+    protected static $param;   //获取提交参数
+
+    public static function init(){
+        self::$param = input();
+    }
+
+    public function get_list(){
+        $where = [];
+        $search = trim(self::$param['search']);
+        !empty($search) && $where['name|signboard|address'] = ['LIKE', '%'.$search.'%'];
+        if(!empty(self::$param['_sort'])){
+            $order = explode(',', self::$param['_sort']);
+            $order = $order[0].' '.$order[1];
+        }else{
+            $order = 'id desc';
+        }
+        return $this->where($where)->order($order)->paginate('', false, page_param());
+    }
+
+    public function get_info(){
+        if(self::$param['id']){
+            $where['id'] = self::$param['id'];
+            $data = $this->where($where)->find();
+        }
+        return $data;
+    }
+
+    public function get_edit(){
+        if(!empty(self::$param['id'])){
+            $user_info = $this->get_info();
+            $res = $user_info->validate(true)->save(self::$param);
+            return ['status'=>$res, 'msg'=>$user_info->getError()];
+        }else{
+            return ['status'=>$this->save(self::$param), 'msg'=>lang('action_fail')];
+        }
+    }
+
+    public function get_del(){
+        $ids = explode(',', self::$param['id']);
+        $res = $this->where(['id'=>['IN', $ids]])->delete();
+        return $res;
+    }
+
+    public function getOrganization($id,$field=array('id')){
+        $info = $this ->field($field) ->find($id);
+        return $info;
+    }
+
+}

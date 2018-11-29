@@ -1,0 +1,75 @@
+<?php
+namespace app\admin\model;
+
+use think\Model;
+
+class Competition extends Model{
+
+    protected $autoWriteTimestamp = true;
+    protected $createTime = 'create_time';
+    protected $updateTime = 'update_time';
+
+    public static $param;
+
+    public static function init(){
+        self::$param['competition_level'] = cache('DB_LEVEL');
+        if(!$competition_level){
+            self::$param['competition_level'] = explode('*', db('config')->where(['k'=>'competition_level'])->value('v'));
+            cache('DB_LEVEL', self::$param['competition_level']);
+        }
+    }
+
+    public function getTypeAttr($val){
+        return self::$param['competition_level'][$val];
+    }
+    public function getDateAttr($val){
+        return date('Y-m-d', $val);
+    }
+    public function getStartTimeAttr($val){
+        return date('Y-m-d', $val);
+    }
+    public function getendTimeAttr($val){
+        return date('Y-m-d', $val);
+    }
+    public function getStatusAttr($val){
+        $arr = ['禁用', '正常', '已过期'];
+        return $arr[$val];
+    }
+    public function getTypeDataAttr($val, $data){
+        return $this->getData('type');
+    }
+    public function getStatusDataAttr($val, $data){
+        return $data['status'];
+    }
+    public function getOrgIdsAttr($val, $data){
+        return explode(',', $val);
+    }
+
+    public function setDateAttr($val){
+        return strtotime($val);
+    }
+    public function setStartTimeAttr($val){
+        return strtotime($val);
+    }
+    public function setEndTimeAttr($val){
+        return strtotime($val);
+    }
+    public function setOrgIdsAttr($val){
+        return implode(',', $val);
+    }
+
+    public function competion_info(){
+        if(self::$param['id']){
+            $where['id'] = self::$param['id'];
+            $data = $this->where($where)->find();
+        }
+        return $data;
+    }
+
+
+    public function getComtitionInfo($id,$field=array('id','name')){
+        $info = $this ->field($field) ->find($id);
+        return $info;
+    }
+
+}

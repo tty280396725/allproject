@@ -1,0 +1,244 @@
+{extend name="public/base" /}
+
+{block name="title"}<title>{if condition="$data"}{$Think.lang.edit}{else /}{$Think.lang.create}{/if}</title>{/block}
+
+{block name="pjax_container"}
+
+<section class="content-header">
+    <h1>报名信息</h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> 报名信息</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-horizontal" method="POST" action="" onsubmit="return false" >
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab1" data-toggle="tab">{$Think.lang.base_param}</a></li>
+                        <li class="pull-right"><a href="javascript:history.back(-1)" class="btn btn-sm" style="padding:10px 2px;"><i class="fa fa-list"></i> {$Think.lang.back}</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab1">
+                            <input type="hidden" name="id" value="{$data.id}">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">姓名</label>
+                                <div class="col-sm-7"><input class="form-control" name="name" value="{$data.name}" placeholder="请输入申报人姓名"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">性别</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control"  name="sex">
+                                        <option value="-1">选择性别</option>
+                                        <option value="1" {if $data.sex eq 1} selected {/if}>男</option>
+                                        <option value="0" {if $data.sex eq 0} selected {/if}>女</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">竞赛选择</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" name="cid">
+                                        {if empty($compList)}
+                                        <option value="">暂无竞赛信息</option>
+                                        {else}
+                                        <option value="">请选择竞赛</option>
+                                        {foreach $compList as $v}
+                                        <option value="{$v.id}" {if $data.cid eq $v.id} selected {/if}>{$v.title}</option>
+                                        {/foreach}
+                                        {/if}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="subject">
+                                <label class="col-sm-2 control-label">学科选择</label>
+                                <div class="col-sm-3">
+                                    <select class="form-control" name="subject" onchange="changeSubject(this.value)">
+                                        <option value="">请选择学科</option>
+                                        {foreach $subjectData as $v}
+                                        <option value="{$v.id}" {if $data.subject eq $v.id} selected {/if}>{$v.name}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+
+
+
+                                <div class="col-sm-3" id="changeSub">
+                                    <select class="form-control" name="class">
+                                        <option value="一年级" {if $data.class eq '一年级'} selected {/if}>一年级</option>
+                                        <option value="二年级" {if $data.class eq '二年级'} selected {/if}>二年级</option>
+                                        <option value="三年级" {if $data.class eq '三年级'} selected {/if}>三年级</option>
+                                        <option value="四年级" {if $data.class eq '四年级'} selected {/if}>四年级</option>
+                                        <option value="五年级" {if $data.class eq '五年级'} selected {/if}>五年级</option>
+                                        <option value="六年级" {if $data.class eq '六年级'} selected {/if}>六年级</option>
+                                        <option value="七年级" {if $data.class eq '七年级'} selected {/if}>七年级</option>
+                                        <option value="八年级" {if $data.class eq '八年级'} selected {/if}>八年级</option>
+                                        <option value="九年级" {if $data.class eq '九年级'} selected {/if}>九年级</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">地区选择</label>
+                                <input type="hidden" name="area" value="{$data.area}">
+                                <div class="col-sm-7">
+                                    <select name="province" id="province" style="height: 30px; width: 80px;">
+                                        <option value="">请选择</option>
+                                    </select>
+                                    <select name="city" id="city" style="height: 30px;width: 80px;">
+                                        <option value="">请选择</option>
+                                    </select>
+                                    <select name="town" id="town" style="height: 30px;width: 80px;">
+                                        <option value="">请选择</option>
+                                    </select>
+                                    <span>{$data.area}</span>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">详细地址</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" name="addr" value="{$data.addr}" placeholder="请输入详细地址">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">机构选择</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" name="oid">
+                                        {if empty($organList)}
+                                        <option value="">暂机构信息</option>
+                                        {else}
+                                        <option value="">请选择机构</option>
+                                        {foreach $organList as $v}
+                                        <option value="{$v.id}" {if $data.oid eq $v.id} selected {/if}>{$v.name}</option>
+                                        {/foreach}
+                                        {/if}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">上传照片</label>
+                                <div class="col-sm-7">
+                                    <div class="input-group">
+                                        <input class="form-control" name="pic" value="{$data.pic}" placeholder="" >
+                                        <span class="input-group-btn">
+                                            <a href="{$data.pic|default='/static/global/face/no-image.png'}" target="_blank" >
+                                                <img src="{$data.pic|default='/static/global/face/no-image.png'}" style="height:34px; width:68px;" />
+                                            </a>
+                                            <button class="btn btn-success btn-flat up-btn" type="button" data-url="{:url('Uploads/upload')}?dir=pic&is_apply=1">
+                                                <i class="fa fa-cloud-upload"> {$Think.lang.Upload}</i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">家长姓名</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" name="pname" value="{$data.pname}" placeholder="请输入家长名称">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">家长电话</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" type="text" name="phone" value="{$data.phone}" placeholder="">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-7">
+                            <div class="btn-group pull-right">
+                                <button type="submit" class="btn btn-info pull-right submits" data-loading-text="&lt;i class='fa fa-spinner fa-spin '&gt;&lt;/i&gt; {$Think.lang.submit}">{$Think.lang.submit}</button>
+                            </div>
+                            <div class="btn-group pull-left">
+                                <button type="reset" class="btn btn-warning">{$Think.lang.reset}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="__STATIC__/web/js/area.js"></script>
+<script src="__STATIC__/web/js/select.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        // $('#province').click(function () {
+        //     $('#province').val('{$data.province}');
+        // });
+        // $('#city').click(function () {
+        //     $('#city').val('{$data.city}');
+        // });
+        //
+        // $('#province').val('{$data.province}');
+        // $('#city').val('{$data.city}');
+        // $('#town').val('{$data.town}');
+    });
+
+    $(function(){
+        /*ajax页面加载icheck，有该控件的页面才需要*/
+        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+            checkboxClass: 'icheckbox_minimal-blue',
+            radioClass: 'iradio_minimal-blue'
+        });
+
+        /*ajax页面加载icheck，有该控件的页面才需要*/
+        $(".select2").select2({language:"zh-CN"});
+
+        $('.timepicker').datetimepicker({
+            format: 'YYYY-MM-DD',   //YYYY-MM-DD HH:mm:ss
+            locale: moment.locale('zh-cn')
+        });
+
+        {if condition=" $rest_login == 1 "}
+        restlogin('{$rest_login_info}');   //登录超时
+        {/if}
+        })
+
+    function changeCompetition(cid) {
+        var cid = cid;
+        if (cid !== 0){
+            $.get('',{},function (obj) {
+
+            })
+        }
+    }
+
+
+    function changeSubject(value) {
+        if (value == 4 || value == 5){
+            $('#changeSub').html('<input type="number" name="age" class="form-control" value="" placeholder="请输入年龄">')
+        }else{
+            $('#changeSub').html('<select class="form-control" name="class">\n' +
+                '                                        <option value="一年级">一年级</option>\n' +
+                '                                        <option value="二年级">二年级</option>\n' +
+                '                                        <option value="三年级">三年级</option>\n' +
+                '                                        <option value="四年级">四年级</option>\n' +
+                '                                        <option value="五年级">五年级</option>\n' +
+                '                                        <option value="六年级">六年级</option>\n' +
+                '                                        <option value="初中(初一)">初中(初一)</option>\n' +
+                '                                        <option value="初中(初二)">初中(初二)</option>\n' +
+                '                                        <option value="初中(初三)">初中(初三)</option>\n' +
+                '                                    </select>')
+        }
+    }
+</script>
+{/block}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试微信登录</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>>
+    <script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
+</head>
+<body>
+
+<div id="login_container"></div>
+</body>
+<script>
+
+    $(document).ready(function()
+    {
+        var obj = new WxLogin
+        ({
+            id:"login_container",//div的id
+            appid: "你的appid",
+            scope: "snsapi_login",//写死
+            redirect_uri:encodeURI("你的处理扫码事件的方法") ,
+            state: "",
+            style: "black",//二维码黑白风格
+            href: "https://某个域名下的css文件"
+        });
+    });
+
+</script>
+</html>

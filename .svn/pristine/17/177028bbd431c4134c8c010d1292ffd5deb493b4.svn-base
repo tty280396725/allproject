@@ -1,0 +1,8 @@
+    {/*底部开始*/}
+{if condition=" $box_is_pjax != 1 "}
+    <footer class="main-footer">
+        <div class="pull-right"></div>
+
+    </footer>
+{/if}
+    {/*底部结束*/}

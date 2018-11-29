@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ef4235bb-453d-4603-a636-84dd256ded2a" name="Default Changelist" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-1970627509">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="15" />
+          <entry key="project.open.time.0" value="8" />
+          <entry key="project.open.time.1" value="1" />
+          <entry key="project.open.time.19" value="1" />
+          <entry key="project.open.time.2" value="1" />
+          <entry key="project.open.time.21" value="1" />
+          <entry key="project.open.time.22" value="1" />
+          <entry key="project.open.time.29" value="2" />
+          <entry key="project.open.time.4" value="2" />
+          <entry key="project.open.time.5" value="1" />
+          <entry key="project.open.time.6" value="2" />
+          <entry key="project.opened" value="20" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="html" value="41" />
+          <entry key="ini" value="1" />
+          <entry key="json" value="1" />
+          <entry key="php" value="291" />
+          <entry key="txt" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="HTML" value="41" />
+          <entry key="Ini" value="1" />
+          <entry key="JSON" value="1" />
+          <entry key="PHP" value="291" />
+          <entry key="PLAIN_TEXT" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="html" value="1354" />
+          <entry key="ini" value="7" />
+          <entry key="php" value="8820" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="HTML" value="1354" />
+          <entry key="Ini" value="7" />
+          <entry key="PHP" value="8820" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/admin/controller/Common.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="9658">
+              <caret line="505" column="32" selection-start-line="505" selection-start-column="32" selection-end-line="505" selection-end-column="32" />
+              <folding>
+                <element signature="e#12398#12654#0#PHP" />
+                <element signature="e#12660#14578#0#PHP" />
+                <element signature="e#16923#17272#0#PHP" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/admin/controller/Grade.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="6710">
+              <caret line="305" column="12" selection-start-line="305" selection-start-column="12" selection-end-line="305" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/admin/controller/Need.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="22">
+              <caret line="276" column="33" selection-start-line="276" selection-start-column="33" selection-end-line="276" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/admin/view/user/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-528" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/admin/view/user/authgroup.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-990" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/admin/view/config/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1754" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/admin/view/userinfo_mechanism/user_list.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1518" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/application/admin/view/user/edit.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="123" column="42" lean-forward="true" selection-start-line="123" selection-start-column="42" selection-end-line="123" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>登录</find>
+      <find>Db</find>
+      <find>post_</find>
+      <find>max_ex</find>
+      <find>apply_state</find>
+      <find>model('Apply_state')</find>
+      <find>singerImg</find>
+      <find>Tick</find>
+      <find>T</find>
+      <find>ticket</find>
+      <find>my_</find>
+      <find>index</find>
+      <find>user_referPhone</find>
+      <find>play</find>
+      <find>comment</find>
+      <find>time_cycle</find>
+      <find>详情</find>
+    </findStrings>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/application/admin/view/index/index.html" />
+        <option value="$PROJECT_DIR$/application/admin/model/Organization.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp47017/www/server/php/72/etc/php.ini" />
+        <option value="$PROJECT_DIR$/application/admin/controller/Guestbook.php" />
+        <option value="$PROJECT_DIR$/application/admin/controller/Index.php" />
+        <option value="$PROJECT_DIR$/application/admin/view/public/admin_bottom.html" />
+        <option value="$PROJECT_DIR$/application/admin/view/works/grade.html" />
+        <option value="$PROJECT_DIR$/application/admin/view/finance/index.html" />
+        <option value="$PROJECT_DIR$/application/admin/controller/Finance.php" />
+        <option value="$PROJECT_DIR$/application/index/controller/Pay.php" />
+        <option value="$PROJECT_DIR$/application/admin/controller/Login.php" />
+        <option value="$PROJECT_DIR$/application/admin/view/public/admin_top.html" />
+        <option value="$PROJECT_DIR$/application/admin/controller/Common.php" />
+        <option value="$PROJECT_DIR$/application/admin/controller/Log.php" />
+        <option value="$PROJECT_DIR$/application/admin/view/public/admin_left.html" />
+        <option value="$PROJECT_DIR$/application/admin/controller/Competition.php" />
+        <option value="$PROJECT_DIR$/application/admin/view/competition/index.html" />
+        <option value="$PROJECT_DIR$/application/index/controller/User.php" />
+        <option value="$PROJECT_DIR$/application/admin/view/apply/edit.html" />
+        <option value="$PROJECT_DIR$/application/admin/model/User.php" />
+        <option value="$PROJECT_DIR$/application/admin/model/Competition.php" />
+        <option value="$PROJECT_DIR$/application/admin/view/grade/index.html" />
+        <option value="$PROJECT_DIR$/application/admin/model/Ticket.php" />
+        <option value="$PROJECT_DIR$/application/admin/controller/Grade.php" />
+        <option value="$PROJECT_DIR$/application/admin/view/need/need.html" />
+        <option value="$PROJECT_DIR$/application/admin/controller/Need.php" />
+        <option value="$PROJECT_DIR$/application/admin/view/apply/index.html" />
+        <option value="$PROJECT_DIR$/application/admin/controller/Apply.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp30887/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Home.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp38715/www/wwwroot/tuike.whtxcloud.com/application/api/controller/User.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp51939/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Base.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp10906/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Userinfo.php" />
+        <option value="$PROJECT_DIR$/application/admin/controller/Works.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp46988/www/wwwroot/tuike.whtxcloud.com/application/api/controller/My.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp46234/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Home.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp11382/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Base.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp10221/www/wwwroot/tuike.whtxcloud.com/application/api/controller/User.php" />
+        <option value="$PROJECT_DIR$/application/index/controller/Works.php" />
+        <option value="$PROJECT_DIR$/application/index/controller/Apply.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp47897/www/wwwroot/jingsai_api/application/index/controller/Apply.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp03530/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Money.php" />
+        <option value="$PROJECT_DIR$/application/index/controller/Index.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp38309/www/wwwroot/jingsai_api/application/index/controller/Index.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp46228/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Video.php" />
+        <option value="$PROJECT_DIR$/application/index/controller/Common.php" />
+        <option value="$PROJECT_DIR$/application/index/controller/My.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp37629/www/wwwroot/jingsai_api/application/index/controller/My.php" />
+        <option value="$PROJECT_DIR$/application/index/model/Competition.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp13294/www/wwwroot/39.108.100.90/config.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp11154/www/wwwroot/39.108.100.90/index.php" />
+        <option value="$USER_HOME$/AppData/Local/Temp/scp20746/www/wwwroot/39.108.100.90/nadmin.php" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/phpspec/prophecy" />
+      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
+      <path value="$PROJECT_DIR$/vendor/topthink/think-worker" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/vendor/topthink/think-installer" />
+      <path value="$PROJECT_DIR$/vendor/topthink/think-angular" />
+      <path value="$PROJECT_DIR$/vendor/topthink/think-migration" />
+      <path value="$PROJECT_DIR$/vendor/topthink/think-queue" />
+      <path value="$PROJECT_DIR$/vendor/topthink/think-mongo" />
+      <path value="$PROJECT_DIR$/vendor/topthink/think-captcha" />
+      <path value="$PROJECT_DIR$/vendor/topthink/think-testing" />
+      <path value="$PROJECT_DIR$/vendor/topthink/think-image" />
+      <path value="$PROJECT_DIR$/vendor/topthink/think-helper" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/vendor/topthink/think-sae" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/phpunit-mock-objects" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-token-stream" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dom-crawler" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/workerman/workerman" />
+    </include_path>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="-3" />
+    <option name="y" value="194" />
+    <option name="width" value="1721" />
+    <option name="height" value="888" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="jing_sai" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jing_sai" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jing_sai" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jing_sai" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jing_sai" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jing_sai" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jing_sai" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jing_sai" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jing_sai" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jing_sai" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="user" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jing_sai" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jing_sai" type="462c0819:PsiDirectoryNode" />
+              <item name="application" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
+              <item name="view" type="462c0819:PsiDirectoryNode" />
+              <item name="userinfo_mechanism" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jing_sai" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jing_sai" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jing_sai" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jing_sai" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="uploads" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jing_sai" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jing_sai" type="462c0819:PsiDirectoryNode" />
+              <item name="vendor" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="Works.php" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/jing_sai/application/admin/controller/Works.php">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.Works.php" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration" cleanupOnStartRun="true">
+    <configuration>C:\Users\dell\AppData\Roaming\Subversion</configuration>
+    <supportedVersion>125</supportedVersion>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ef4235bb-453d-4603-a636-84dd256ded2a" name="Default Changelist" comment="" />
+      <created>1539409495492</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1539409495492</updated>
+      <workItem from="1539409498847" duration="7762000" />
+      <workItem from="1539566559925" duration="29000" />
+      <workItem from="1539747770967" duration="5076000" />
+      <workItem from="1540276750650" duration="12996000" />
+      <workItem from="1540347117394" duration="2923000" />
+      <workItem from="1540448568494" duration="11433000" />
+      <workItem from="1540514935806" duration="24809000" />
+      <workItem from="1540549849058" duration="392000" />
+      <workItem from="1540773840162" duration="8221000" />
+      <workItem from="1540801255818" duration="7475000" />
+      <workItem from="1540859535491" duration="10739000" />
+      <workItem from="1540946716126" duration="8562000" />
+      <workItem from="1540964209590" duration="5079000" />
+      <workItem from="1541033272142" duration="20000" />
+      <workItem from="1541042670812" duration="894000" />
+      <workItem from="1541119315921" duration="599000" />
+      <workItem from="1541380056601" duration="25000" />
+      <workItem from="1542005462753" duration="1453000" />
+      <workItem from="1542852116956" duration="3118000" />
+      <workItem from="1542943769796" duration="1872000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="113477000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-3" y="194" width="1721" height="888" extended-state="1" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.307646" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3299748" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="10" />
+      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/application/admin/view/grade/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="18" column="48" selection-start-line="18" selection-start-column="48" selection-end-line="18" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/model/Competition.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="256">
+          <caret line="33" column="1" selection-start-line="33" selection-start-column="1" selection-end-line="36" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/model/Ticket.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/view/need/need.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="184" lean-forward="true" selection-start-line="184" selection-end-line="184" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp51939/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Base.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp30887/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Home.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp38715/www/wwwroot/tuike.whtxcloud.com/application/api/controller/User.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp10906/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Userinfo.php" />
+    <entry file="file://$USER_HOME$/Downloads/index (1).php" />
+    <entry file="file://$PROJECT_DIR$/application/admin/controller/Works.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="20" column="5" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/controller/User.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3982">
+          <caret line="186" column="21" selection-start-line="186" selection-start-column="21" selection-end-line="186" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/controller/Login.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1518">
+          <caret line="72" column="26" selection-start-line="72" selection-start-column="26" selection-end-line="72" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/controller/User.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9240">
+          <caret line="424" column="29" selection-start-line="424" selection-start-column="29" selection-end-line="424" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/view/index/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="8" column="40" selection-start-line="8" selection-start-column="40" selection-end-line="8" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp46234/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Home.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp11382/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Base.php" />
+    <entry file="file://$PROJECT_DIR$/public/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="22" column="46" lean-forward="true" selection-start-line="22" selection-start-column="46" selection-end-line="22" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp10221/www/wwwroot/tuike.whtxcloud.com/application/api/controller/User.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp46988/www/wwwroot/tuike.whtxcloud.com/application/api/controller/My.php" />
+    <entry file="file://$PROJECT_DIR$/application/index/controller/Apply.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="106" column="36" selection-start-line="106" selection-start-column="36" selection-end-line="106" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/controller/Works.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="858">
+          <caret line="39" column="23" selection-start-line="39" selection-start-column="23" selection-end-line="39" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp47897/www/wwwroot/jingsai_api/application/index/controller/Apply.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp03530/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Money.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp39607/www/wwwroot/tuike.whtxcloud.com/public/index.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp40027/www/wwwroot/tuike.whtxcloud.com/application/index/controller/Index.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp32040/www/wwwroot/jingsai_api/public/index.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp41788/www/wwwroot/jingsai_api/application/index/controller/Common.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp38309/www/wwwroot/jingsai_api/application/index/controller/Index.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp46228/www/wwwroot/tuike.whtxcloud.com/application/api/controller/Video.php" />
+    <entry file="file://$PROJECT_DIR$/thinkphp/helper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="166" column="13" selection-start-line="166" selection-start-column="13" selection-end-line="166" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp37629/www/wwwroot/jingsai_api/application/index/controller/My.php" />
+    <entry file="file://$PROJECT_DIR$/application/index/controller/Common.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/controller/Uploads.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="47" column="32" selection-start-line="47" selection-start-column="32" selection-end-line="47" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/model/Competition.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="64" column="65" selection-start-line="64" selection-start-column="65" selection-end-line="64" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/controller/My.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="658">
+          <caret line="235" column="7" selection-start-line="235" selection-start-column="7" selection-end-line="235" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/index/controller/Index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="658">
+          <caret line="65" column="41" selection-start-line="65" selection-start-column="41" selection-end-line="65" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/controller/Apply.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-8112">
+          <caret line="14" column="30" lean-forward="true" selection-start-line="14" selection-start-column="30" selection-end-line="14" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp14673/www/wwwroot/39.108.100.90/source/myfun.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp14271/www/wwwroot/39.108.100.90/source/common.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp13294/www/wwwroot/39.108.100.90/config.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp11154/www/wwwroot/39.108.100.90/index.php" />
+    <entry file="file://$USER_HOME$/AppData/Local/Temp/scp20746/www/wwwroot/39.108.100.90/nadmin.php" />
+    <entry file="file://$PROJECT_DIR$/application/admin/view/apply/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="39" column="33" selection-start-line="39" selection-end-line="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/controller/Common.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9658">
+          <caret line="505" column="32" selection-start-line="505" selection-start-column="32" selection-end-line="505" selection-end-column="32" />
+          <folding>
+            <element signature="e#12398#12654#0#PHP" />
+            <element signature="e#12660#14578#0#PHP" />
+            <element signature="e#16923#17272#0#PHP" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/controller/Grade.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6710">
+          <caret line="305" column="12" selection-start-line="305" selection-start-column="12" selection-end-line="305" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/controller/Need.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="276" column="33" selection-start-line="276" selection-start-column="33" selection-end-line="276" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/view/user/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-528" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/view/user/authgroup.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-990" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/view/config/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1754" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/view/userinfo_mechanism/user_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1518" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/admin/view/user/edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="123" column="42" lean-forward="true" selection-start-line="123" selection-start-column="42" selection-end-line="123" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

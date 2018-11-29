@@ -1,0 +1,299 @@
+<?php
+namespace app\admin\controller;
+
+use app\admin\model\Ticket;
+use think\Db;
+use think\Loader;
+use think\Request;
+
+class Need extends Common
+{
+    private $cModel;   //当前控制器关联模型
+
+    public function _initialize()
+    {
+        parent::_initialize();
+        $this->cModel = new Ticket();   //别名：避免与控制名冲突
+    }
+
+    /***
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 待考试的列表
+     */
+
+    public function need(){
+
+        if (request() ->isGet()){
+
+            $where = [];
+            if (input('get.search')){
+                $where['a.aid|a.uid'] = ['like', '%'.input('get.search').'%'];
+            }
+            if (input('get.cid')){
+                $where['a.cid'] = input('get.cid');
+                $this ->assign('cid',input('get.cid'));
+            }
+            if (input('get.subject')){
+                $where['a.subject'] = input('get.subject');
+                $this ->assign('subject',input('get.subject'));
+            }
+
+            if (input('get.class')){
+                $where['a.class'] = input('get.class');
+                $this ->assign('class',input('get.class'));
+            }
+
+            if (input('get._sort')){
+                $order = explode(',', input('get._sort'));
+                $order = $order[0].' '.$order[1];
+            }else{
+                $order = 'a.id asc';
+            }
+
+
+            $dataList = $this->cModel->alias('a')->where($where)->order($order)->field('a.*')->paginate('', false, page_param());
+
+            $compData = Db::table('tf_competition') ->where('status',1)->where('subject','neq',5)->field('id,title,subject') ->select();
+
+            $classData = Db::table('tf_classes') ->field('id,name') ->select();
+            $this->assign('dataList', $dataList);
+            $this ->assign('compData',$compData); //竞赛数据
+            $this ->assign('classData',$classData);
+
+            return $this->fetch('need');
+        }
+
+    }
+
+    /***
+     * @throws \PHPExcel_Exception
+     * @throws \PHPExcel_Reader_Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 上传考试用户的准考证和考试地点
+     */
+    public function importExecl(){
+
+        if (request()->isPost()) {
+
+            $header = array('id','name','class','uid','title','date','time','addr','tnum');
+
+            $resultRe = parent::exportExcel($header);
+            if (empty($resultRe)){
+                $this ->error('上传格式错误');
+                die();
+            }
+
+            $resultRs = parent::array_unset_tt($resultRe,'id'); //二维数组根据ID值来去重
+
+
+            foreach ($resultRs as $v){
+                $result[] = $v;
+            }
+
+            $ticketData =  $this ->cModel ->field('id,aid') ->select();
+
+            $tidArr =array();
+            $aidArr = array();
+            foreach ($ticketData as $v){
+                $tidArr[$v['aid']] = $v['id'];
+                $aidArr[] = $v['aid'];
+            }
+
+            $applyObj = new \app\admin\model\Apply();
+            $error = array();
+            $insert = array();
+            $idsArr = array();
+            $update = array();
+            foreach ($result as $k=>$v){
+                $id = intval($v['id']);
+                $addr = trim($v['addr']);
+                $tnum = trim($v['tnum']);
+                if ($id && $addr && $tnum){
+                    $data = $applyObj->alias('a') ->join('competition c','a.cid=c.id') ->where('a.id',$id) ->limit(1)->field('a.cid,a.subject,a.age,a.class,a.name,a.sex,a.pic,c.date,c.time,c.title,a.uid,a.id') ->find();
+                    if ($data){
+                        if (in_array($id,$aidArr)){
+                            /**执行修改分支*/
+                            $update[$k]['tnum'] = $tnum;
+                            $update[$k]['addr'] = $addr;
+                            $update[$k]['update_time'] = time();
+                            $update[$k]['id'] = $tidArr[$data['id']];
+                        }else{
+                            $idsArr[$k]['id'] = $data['id'];
+                            $idsArr[$k]['is_create'] = 1;
+
+                            $insert[$k]['aid'] = $data['id'];
+                            $insert[$k]['tnum'] = $tnum;
+                            $insert[$k]['uid'] = $data['uid'];
+                            $insert[$k]['cid'] = $data['cid'];
+                            $insert[$k]['addr'] = $addr;
+                            $insert[$k]['name'] = $data['name'];
+                            $insert[$k]['sex'] = $data['sex'];
+                            $insert[$k]['age'] = $data['age'];
+                            $insert[$k]['subject'] = $data['subject'];
+                            $insert[$k]['class'] = $data['class'];
+                            $insert[$k]['time'] = $data['time'];
+                            $insert[$k]['date'] = $data['date'];
+                            $insert[$k]['pic'] = $data['pic'];
+                            $insert[$k]['title'] = $data['title'];
+                            $insert[$k]['create_time'] = time();
+
+                        }
+                    }else{
+                        $error[$k]['name'] = $v['name'];
+                        $error[$k]['tnum'] = $v['tnum'];
+                    }
+                }
+
+            }
+
+            //var_dump($insert);var_dump($update);var_dump($idsArr);die();
+
+
+            if (empty($insert) && empty($update)){
+                $this ->error('上传内容不能为空,或者准考证号和考点为空');die();
+            }
+
+            if (empty($insert) && $update){
+                $res3 = $this ->cModel ->isUpdate()->saveAll($update); //批量修改ticket的数据
+                if ($res3){
+                    return $this->success('上传成功');
+                }else{
+                    return $this ->error('上传失败');
+                }
+            }
+
+
+            if (empty($update) && $insert){
+
+                    $res = $this ->cModel ->saveAll($insert,false);
+                    $res2 = $applyObj ->isUpdate()->saveAll($idsArr,true); //批量更新apply表的is_create 字段
+
+                    if ($res && $res2){
+                        return $this->success('上传成功');
+                    }else{
+                        return $this ->error('上传失败');
+                    }
+
+            }
+
+            if ($insert && $update){
+                $res = $this ->cModel->validate(true) ->saveAll($insert);
+                $res2 = $applyObj ->isUpdate()->saveAll($idsArr); //批量更新apply表的is_create 字段
+                $res3 = $this ->cModel ->isUpdate()->saveAll($update); //批量修改ticket的数据
+
+                if ($res && $res2 && $res3){
+                    return $this->success('上传成功');
+                }else{
+                    return $this ->error('上传失败');
+                }
+            }
+
+        }
+
+    }
+
+
+    /***
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     * 删除准考证
+     */
+
+    public function delete()
+    {
+        if (request()->isPost()){
+            $id = input('id');
+            if (isset($id) && !empty($id)){
+                $id_arr = explode(',', $id);
+                $where = [ 'id' => ['in', $id_arr] ];
+
+                $ticketObj = new Ticket();
+                $applyObj = new \app\admin\model\Apply();
+
+                $ticketData = $ticketObj ->where($where)->where('subject','neq',5) ->field('aid') ->select(); //去掉书画的不需要修改
+
+                $applyList = array();
+                foreach ($ticketData as $k=>$v){
+                    $applyList[$k]['id'] = $v['aid'];
+                    $applyList[$k]['is_create'] = 0;
+                    $applyList[$k]['update_time'] = time();
+                }
+
+                Db::startTrans();
+                try{
+                    $result = $this->cModel->where($where)->delete();
+                    $result2 = $applyObj ->isUpdate() ->saveAll($applyList);
+
+                    if ($result && $result2){
+                        Db::commit();
+                        return ajaxReturn(lang('action_success'), url('need'));
+                    }else{
+                        return ajaxReturn($this->cModel->getError());
+                    }
+
+                }catch (\Exception $e) {
+                    // 回滚事务
+                    Db::rollback();
+                    return ajaxReturn($e->getMessage());
+                }
+
+            }
+
+        }
+    }
+
+
+    /**
+     * 下载模板 导入待考列表生成
+     */
+    public function download(){
+
+        $where['b.dstatus'] = 2;
+        if (input('get.cid')){
+            $where['a.cid'] = input('get.cid');
+            $this ->assign('cid',input('get.cid'));
+        }
+
+        if (input('get.oid')){
+            $where['a.oid'] = input('get.oid');
+            $this ->assign('oid',input('get.oid'));
+        }
+        $applyObj = new \app\admin\model\Apply();
+
+        $dataList = $applyObj ->alias('a') ->join('competition c','a.cid=c.id')->join('apply_state b','b.aid=a.id')->where($where)->where('a.subject','neq',5)->order('a.id desc')->field('a.*,b.payType,b.dstatus,c.title as ctitle,c.date,c.time')->select();
+
+        $list = array();
+        foreach ($dataList as $k=>$v){
+            $list[$k][] = $v->id;
+            $list[$k][] = $v->name;
+            $list[$k][] = parent::getnewValue($v ->subject,'subject');
+            $list[$k][] = $v->uid;
+            $list[$k][] = $v->ctitle;
+            $list[$k][] = date('Y-m-d',$v->date);
+            $list[$k][] = $v->time;
+            $list[$k][] = '';
+            $list[$k][] = '';
+        }
+        $header = array('报名ID','姓名','年级','用户ID','比赛项目','考试日期','考试时间','考试地点','准考证号');
+        $data =array();
+        $filename = '考试地点填写模板';
+
+        foreach ($list as $k=>$v){
+            foreach ($header as $sk => $sv){
+                $data[$k][$header[$sk]] = $v[$sk];
+            }
+        }
+//        var_dump($data);die();
+
+        parent::importExcel($header,$data,$filename);
+        die();
+    }
+
+
+}

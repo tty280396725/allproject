@@ -1,0 +1,192 @@
+{extend name="public/base" /}
+
+{block name="title"}<title>{if condition="$data"}{$Think.lang.edit}{else /}{$Think.lang.create}{/if}</title>{/block}
+
+{block name="pjax_container"}
+{load href="__STATIC__/layui/css/layui.css"}
+{load href="__STATIC__/layui/layui.js"}
+
+<section class="content-header">
+    <h1>竞赛信息</h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> 竞赛信息</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-horizontal" method="POST" action="" onsubmit="return false" >
+                <input type='hidden' name="id" value="{$data.id}"/>
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab1" data-toggle="tab">{$Think.lang.base_param}</a></li>
+                        <li class="pull-right"><a href="javascript:history.back(-1)" class="btn btn-sm" style="padding:10px 2px;"><i class="fa fa-list"></i> {$Think.lang.back}</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">标题</label>
+                                <div class="col-sm-7"><input class="form-control" name="title" value="{$data.title}" placeholder="请输入竞赛标题"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">学科</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control select2" name="subject">
+                                        <option value="">请选择竞赛类型</option>
+                                        {foreach name="subject" item="vo"}
+                                            <option value="{$vo.id}" {if condition="$data['subject'] eq $vo['id']"}selected{/if} >{$vo.name}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">年级</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" name="class" value="{$data.class}" placeholder="年级范围" type="text">
+                                </div>
+                                <!--<div class="col-sm-7">-->
+
+                                    <!--<select class="form-control select2" name="class">-->
+                                        <!--<option value="">请选择竞赛类型</option>-->
+                                        <!--{foreach name="classes" item="vo"}-->
+                                        <!--<option value="{$vo}" {if condition="$data['class'] eq $vo"}selected{/if} >{$vo}</option>-->
+                                        <!--{/foreach}-->
+                                    <!--</select>-->
+                                <!--</div>-->
+                            </div>
+
+                            <!--<div class="form-group">-->
+                                <!--<label class="col-sm-2 control-label">竞赛等级</label>-->
+                                <!--<div class="col-sm-7">-->
+                                    <!--<select class="form-control select2" name="type">-->
+                                        <!--<option value="">请选择竞赛类型</option>-->
+                                        <!--<option value="0" {if condition="$data['typeData'] eq 0"}selected{/if} >初赛</option>-->
+                                        <!--<option value="1" {if condition="$data['typeData'] eq 1"}selected{/if} >复赛</option>-->
+                                        <!--<option value="2" {if condition="$data['typeData'] eq 2"}selected{/if} >决赛</option>-->
+                                    <!--</select>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">合格分数线</label>
+                                <div class="col-sm-7">
+                                    <input class="form-control" name="pass_line" value="{$data.pass_line}" placeholder="设置合格分数线" type="number">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">考察内容</label>
+                                <div class="col-sm-7"><input class="form-control" name="com_des" value="{$data.com_des}" placeholder="请输入考察内容"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">考试日期</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="date" name="date" value="{$data.date}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">考试时间</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="time" name="stime" value="{$data.stime}" placeholder="">
+                                </div>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="time" name="etime" value="{$data.etime}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">申报开始时间</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="date" name="startTime" value="{$data.startTime}" placeholder="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">申报结束时间</label>
+                                <div class="col-sm-3">
+                                    <input class="form-control" type="date" name="endTime" value="{$data.endTime}" placeholder="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">考试费用</label>
+                                <div class="col-sm-7"><input class="form-control" type="number" name="cost" value="{$data.cost}" placeholder="请输入竞赛费用"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">报名完成说明信息</label>
+                                <div class="col-sm-7"><input class="form-control" name="tips_msg" value="{$data.tips_msg}" placeholder="请输入说明信息"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">赛事详情</label>
+                                <div class="col-sm-7">
+                                   <textarea name="content" rows="5" class="form-control" placeholder="请输入赛事详情">{$data.content}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">状态</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control select2" name="status" style="width:100%;">
+                                        <option value="1" {if condition="($data['statusData'] eq 1) OR (empty($data['statusData']))"}selected{/if} >正常</option>
+                                        <option value="0" {if condition="($data['statusData'] heq 0)"}selected{/if} >禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-7">
+                            <div class="btn-group pull-right">
+                                <button type="submit" class="btn btn-info pull-right submits" data-loading-text="&lt;i class='fa fa-spinner fa-spin '&gt;&lt;/i&gt; {$Think.lang.submit}">{$Think.lang.submit}</button>
+                            </div>
+                            <div class="btn-group pull-left">
+                                <button type="reset" class="btn btn-warning">{$Think.lang.reset}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+
+$(function(){
+    /*ajax页面加载icheck，有该控件的页面才需要*/
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+        checkboxClass: 'icheckbox_minimal-blue',
+        radioClass: 'iradio_minimal-blue'
+    });
+    
+    /*ajax页面加载icheck，有该控件的页面才需要*/
+    $(".select2").select2({language:"zh-CN"});
+
+    KindEditor.create('textarea[name="content"]',{
+        width : '100%',   //宽度
+        height : '320px',   //高度
+        resizeType : '0',   //禁止拖动
+        allowFileManager : true,   //允许对上传图片进行管理
+        uploadJson : '{:url("Uploads/upload")}',   //文件上传地址
+        fileManagerJson : '{:url("Uploads/manager")}',   //文件管理地址
+        urlType : 'domain',   //带域名的路径
+        formatUploadUrl: true,   //自动格式化上传后的URL
+        autoHeightMode: false,   //开启自动高度模式
+        afterBlur: function () { this.sync(); }   //同步编辑器数据
+    });
+    
+    $('.timepicker').datetimepicker({
+        format: 'YYYY-MM-DD',   //YYYY-MM-DD HH:mm:ss
+        locale: moment.locale('zh-cn')
+    });
+    
+    {if condition=" $rest_login == 1 "}
+    restlogin('{$rest_login_info}');   //登录超时
+    {/if}
+});
+</script>
+{/block}
